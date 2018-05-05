@@ -1,5 +1,12 @@
 {
     "name": "nuwave/lighthouse-subscriptions",
+    "description": "lighthouse-ws provides a driver based solution for GraphQL subscriptions with the Lighthouse package.",
+    "keywords": [
+        "laravel",
+        "websockets",
+        "graphql",
+        "subscriptions"
+    ],
     "type": "library",
     "license": "MIT",
     "authors": [
