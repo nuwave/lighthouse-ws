@@ -1,0 +1,36 @@
+{
+    "name": "nuwave/lighthouse-subscriptions",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christopher Moore",
+            "email": "chris@nuwavecommerce.com"
+        }
+    ],
+    "require": {
+        "nuwave/lighthouse": "dev-master",
+        "illuminate/support": "^5.4",
+        "illuminate/redis": "^5.4",
+        "illuminate/broadcasting": "^5.4",
+        "illuminate/console": "^5.4",
+        "cboden/ratchet": "^0.4.0",
+        "clue/redis-react": "^2.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0",
+        "orchestra/testbench": "^3.6",
+        "friendsofphp/php-cs-fixer": "^2.11",
+        "laravel/passport": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nuwave\\Lighthouse\\Subscriptions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
