@@ -1,3 +1,5 @@
-# lighthouse-subscriptions
+# lighthouse-ws
 
-This is currently considered to be an **alpha** package and the API is likely to change before `v1.0.0` is released.
+### GraphQL Subscription server for [Lighthouse](https://github.com/nuwave/lighthouse) (v2.1+)
+
+This package is currently in **beta** and the API may change before `v1.0.0` is released.
