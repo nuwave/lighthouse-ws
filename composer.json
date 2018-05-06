@@ -1,5 +1,5 @@
 {
-    "name": "nuwave/lighthouse-subscriptions",
+    "name": "nuwave/lighthouse-ws",
     "description": "lighthouse-ws provides a driver based solution for GraphQL subscriptions with the Lighthouse package.",
     "keywords": [
         "laravel",
