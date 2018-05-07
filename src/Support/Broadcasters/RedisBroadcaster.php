@@ -32,7 +32,7 @@ class RedisBroadcaster extends Broadcaster
 
         foreach ($this->formatChannels($channels) as $subscription) {
             $connection->publish(Protocol::BROADCAST_CHANNEL, json_encode(array_merge(
-                ['event' => $payload, 'class' => $class],
+                ['event' => $payload],
                 compact('subscription')
             )));
         }

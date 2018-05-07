@@ -10,9 +10,14 @@ use Nuwave\Lighthouse\Subscriptions\Support\Parser;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Ratchet\WebSocket\WsServerInterface;
+use Illuminate\Queue\SerializesAndRestoresModelIdentifiers;
+use Illuminate\Contracts\Database\ModelIdentifier;
 
 class TransportManager implements MessageComponentInterface, WsServerInterface
 {
+
+    use SerializesAndRestoresModelIdentifiers;
+
     /**
      * Connected clients.
      *
@@ -240,15 +245,23 @@ class TransportManager implements MessageComponentInterface, WsServerInterface
         Log::v(' ', '', 'Subscribers ['.$subscription.']:');
         Log::v(' ', '', json_encode($subscribers));
 
-        if (!x $field || empty($subscribers)) {
+        if (! $field || empty($subscribers)) {
             return;
         }
 
-        $class = array_get($payload, 'class');
+        $event = array_get($payload, 'event');
 
-        \Log::info(json_encode(class_uses($class))();
+        foreach ($event as $key => $value) {
+            if (is_array($value) && array_keys($value) == ["class", "id", "relations", "connection"]){
+                $value = new ModelIdentifier($value['class'], $value['id'], $value['relations'], $value['connection']);
+            }
 
-        $event = $field->transform(array_get($payload, 'event'));
+            $event[$key] = $this->getRestoredPropertyValue($value);
+        }
+
+        $event = $field->transform($event);
+
+        Log::v(' ', '', json_encode($event));
 
         collect($this->clients)
             ->filter(function (ConnectionInterface $conn) use ($subscribers) {

@@ -1,10 +1,11 @@
 <?php
 
-namespace Lighthouse\Support\Traits;
+namespace Nuwave\Lighthouse\Subscriptions;
 
 use ReflectionClass;
 use ReflectionProperty;
 use Illuminate\Contracts\Database\ModelIdentifier;
+use Illuminate\Queue\SerializesAndRestoresModelIdentifiers;
 
 trait SerializesModels
 {
@@ -28,29 +29,6 @@ trait SerializesModels
         return array_values(array_filter(array_map(function ($p) {
             return $p->isStatic() ? null : $p->getName();
         }, $properties)));
-    }
-
-    /**
-     * Restore the model after serialization.
-     *
-     * @return void
-     */
-    public function wakeup()
-    {
-        foreach ((new ReflectionClass($this))->getProperties() as $property) {
-            if ($property->isStatic()) {
-                continue;
-            }
-
-         	$value = $this->getPropertyValue($property);
-            if (is_array($value) && array_keys($value) == ["class", "id", "relations", "connection"]){
-                $value = new ModelIdentifier($value['class'], $value['id'], $value['relations'], $value['connection']);
-            }
-
-            $property->setValue($this, $this->getRestoredPropertyValue(
-                $this->getPropertyValue($property)
-            ));
-        }
     }
 
     /**
