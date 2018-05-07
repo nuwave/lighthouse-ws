@@ -240,9 +240,13 @@ class TransportManager implements MessageComponentInterface, WsServerInterface
         Log::v(' ', '', 'Subscribers ['.$subscription.']:');
         Log::v(' ', '', json_encode($subscribers));
 
-        if (! $field || empty($subscribers)) {
+        if (!x $field || empty($subscribers)) {
             return;
         }
+
+        $class = array_get($payload, 'class');
+
+        \Log::info(json_encode(class_uses($class))();
 
         $event = $field->transform(array_get($payload, 'event'));
 
