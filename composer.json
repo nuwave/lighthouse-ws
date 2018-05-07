@@ -35,6 +35,14 @@
             "Nuwave\\Lighthouse\\Subscriptions\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nuwave\\Lighthouse\\Subscriptions\\SubscriptionServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
