@@ -10,9 +10,14 @@ use Nuwave\Lighthouse\Subscriptions\Support\Parser;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Ratchet\WebSocket\WsServerInterface;
+use Illuminate\Queue\SerializesAndRestoresModelIdentifiers;
+use Illuminate\Contracts\Database\ModelIdentifier;
 
 class TransportManager implements MessageComponentInterface, WsServerInterface
 {
+
+    use SerializesAndRestoresModelIdentifiers;
+
     /**
      * Connected clients.
      *
@@ -142,10 +147,32 @@ class TransportManager implements MessageComponentInterface, WsServerInterface
      */
     protected function handleConnectionInit(ConnectionInterface $conn, array $msg)
     {
-        $this->subscriptions()->store(
-            $conn->resourceId,
-            $msg
-        );
+        try{
+            $cookiesHeader = $conn->httpRequest->getHeader('Cookie');
+            if(count($cookiesHeader)) {
+                $cookies = \GuzzleHttp\Psr7\parse_header($cookiesHeader)[0];
+                if (array_key_exists('laravel_token', $cookies)) {
+                    $msg['Authorization'] = 'Bearer ' . $cookies['laravel_token'];
+                }
+            }
+
+            $this->subscriptions()->store(
+                $conn->resourceId,
+                $msg
+            );
+
+            $this->sendMessage($conn, [
+                'type' => Protocol::GQL_CONNECTION_ACK,
+            ]);
+
+        } catch (\Exception $e) {
+            $this->sendMessage($conn, [
+                'type' => Protocol::GQL_CONNECTION_ERROR,
+                'payload' => [
+                    'errors' => ['message' => $e->getMessage()],
+                ],
+            ]);
+        }
     }
 
     /**
@@ -238,13 +265,22 @@ class TransportManager implements MessageComponentInterface, WsServerInterface
         $subscribers = $this->subscriptions()->subscribers($subscription);
 
         Log::v(' ', '', 'Subscribers ['.$subscription.']:');
-        Log::v(' ', '', json_encode($subscribers));
 
         if (! $field || empty($subscribers)) {
             return;
         }
 
-        $event = $field->transform(array_get($payload, 'event'));
+        $event = array_get($payload, 'event');
+
+        foreach ($event as $key => $value) {
+            if (is_array($value) && array_keys($value) == ["class", "id", "relations", "connection"]){
+                $value = new ModelIdentifier($value['class'], $value['id'], $value['relations'], $value['connection']);
+            }
+
+            $event[$key] = $this->getRestoredPropertyValue($value);
+        }
+
+        $event = $field->transform($event);
 
         collect($this->clients)
             ->filter(function (ConnectionInterface $conn) use ($subscribers) {
