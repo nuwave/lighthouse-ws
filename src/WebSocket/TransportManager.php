@@ -243,7 +243,6 @@ class TransportManager implements MessageComponentInterface, WsServerInterface
         $subscribers = $this->subscriptions()->subscribers($subscription);
 
         Log::v(' ', '', 'Subscribers ['.$subscription.']:');
-        Log::v(' ', '', json_encode($subscribers));
 
         if (! $field || empty($subscribers)) {
             return;
@@ -260,8 +259,6 @@ class TransportManager implements MessageComponentInterface, WsServerInterface
         }
 
         $event = $field->transform($event);
-
-        Log::v(' ', '', json_encode($event));
 
         collect($this->clients)
             ->filter(function (ConnectionInterface $conn) use ($subscribers) {
