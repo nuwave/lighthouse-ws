@@ -36,9 +36,12 @@
         }
     },
     "extra": {
-      "laravel": {
-          "providers": ["Nuwave\\Lighthouse\\Subscriptions\\SubscriptionServiceProvider"]
-      }
+        "laravel": {
+            "providers": [
+                "Nuwave\\Lighthouse\\Subscriptions\\SubscriptionServiceProvider"
+            ],
+            "aliases": {}
+        }
     },
     "autoload-dev": {
         "psr-4": {
