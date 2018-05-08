@@ -21,6 +21,7 @@
         "illuminate/redis": "^5.4",
         "illuminate/broadcasting": "^5.4",
         "illuminate/console": "^5.4",
+        "illuminate/queue": "^5.4",
         "cboden/ratchet": "^0.4.0",
         "clue/redis-react": "^2.2"
     },
