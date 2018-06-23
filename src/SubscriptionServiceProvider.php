@@ -91,8 +91,8 @@ class SubscriptionServiceProvider extends ServiceProvider
      */
     protected function registerDirectives()
     {
-        graphql()->directives()->register(SubscriptionDirective::class);
-        graphql()->directives()->register(WebsocketDirective::class);
+        graphql()->directives()->register(new SubscriptionDirective());
+        graphql()->directives()->register(new WebsocketDirective());
     }
 
     /**
